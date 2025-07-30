@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de huella de carbono COLBOYD</title>
+  <link rel="icon" href="https://images.icon-icons.com/317/PNG/512/calculator-icon_34473.png" type="image/png">
+  <style>
+    body {
+      background-color: #FFFFFF;
+      font-family: 'Comic Sans MS', sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 15px;
+    }
+    h1 {
+      text-align: center;
+      color: #000000 ;
+    }
+    h3 {
+      text-align: center;
+      color: #000000;
+    }
+    .pregunta {
+      background-color: #c8e6c9;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    label {
+      font-size: 18px;
+      margin-bottom: 10px;
+      display: block;
+    }
+    input[type="number"], .opciones {
+      font-size: 16px;
+      padding: 8px;
+      border-radius: 8px;
+      margin-top: 8px;
+      display: block;
+      width: 100%;
+    }
+    .opciones input {
+      margin-right: 10px;
+    }
+    button {
+      margin-top: 30px;
+      padding: 12px;
+      font-size: 18px;
+      width: 100%;
+      background-color: #006400;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #42a5f5;
+    }
+    #resultado {
+      margin-top: 30px;
+      background-color: #c8e6c9;
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      border: 1px solid #388e3c;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Mi Huella de Carbono COLBOYD</h1>
+  <h3>"Transforma tu huella, trasforma el planeta"</h3>
+
+  <div class="pregunta">
+    <label>¿Cuántas veces a la semana usas carro?</label>
+    <input type="number" id="carro" min="0" max="7" value="0">
+  </div>
+
+  <div class="pregunta">
+    <label>¿Cuántas veces a la semana usas bus?</label>
+    <input type="number" id="bus" min="0" max="7" value="0">
+  </div>
+
+  <div class="pregunta">
+    <label>¿Cuántas veces a la semana usas moto?</label>
+    <input type="number" id="moto" min="0" max="7" value="0">
+  </div>
+  <div class="pregunta">
+    <label>¿Cuántas veces al mes compras ropa nueva?</label>
+    <input type="number" id="ropa" min="0" max="30" value="0">
+  </div>
+
+  <div class="pregunta">
+    <label>¿Apagas las luces cuando no las necesitas?</label>
+    <div class="opciones">
+      <input type="radio" name="luz" value="0" checked> Siempre<br>
+      <input type="radio" name="luz" value="1"> Casi siempre<br>
+      <input type="radio" name="luz" value="2"> Nunca
+    </div>
+  </div>
+
+  <div class="pregunta">
+    <label>¿Comes carne todos los días?</label>
+    <div class="opciones">
+      <input type="radio" name="carne" value="2" checked> Siempre<br>
+      <input type="radio" name="carne" value="1"> Casi siempre<br>
+      <input type="radio" name="carne" value="0"> Nunca
+    </div>
+  </div>
+
+  <button onclick="calcular()">Calcular mi huella</button>
+
+  <div id="resultado"></div>
+
+  <script>
+    function calcular() {
+      const carro = parseInt(document.getElementById("carro").value);
+      const bus   = parseInt(document.getElementById("bus").value);
+      const moto  = parseInt(document.getElementById("moto").value);
+      const ropa  = parseInt(document.getElementById("ropa").value);
+
+      const luz = parseInt(document.querySelector('input[name="luz"]:checked').value);
+      const carne = parseInt(document.querySelector('input[name="carne"]:checked').value);
+
+      const totalKg = 
+        carro * 150 +
+        bus   * 80  +
+        moto  * 100  +
+        luz   * 700  +
+        carne * 900  +
+        ropa  * 500;
+
+      const totalToneladas = totalKg / 1000;
+      const media = 7.0;
+
+      let resultado = `<strong>Tu huella de carbono anual es de ${totalToneladas.toFixed(2)} toneladas de CO₂.</strong><br><br>`;
+
+      if (totalToneladas < media) {
+        resultado += "¡Estás por debajo del promedio de Europa (7 t por persona en Europa)! Muy bien cuidando el planeta.";
+      } else if (totalToneladas > media) {
+        resultado += "Estás por encima del promedio de Europa (7 t por persona en Europa). Puedes mejorar con pequeños cambios.";
+      } else {
+        resultado += "Estás en el promedio de Europa (7 t por persona en Europa). ¡Vamos por un mundo más verde!";
+      }
+
+      document.getElementById("resultado").innerHTML = resultado;
+    }
+  </script>
+
+</body>
+</html>
