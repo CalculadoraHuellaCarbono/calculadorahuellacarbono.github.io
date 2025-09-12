@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Calculadora de huella de carbono COLBOYD</title>
-  <link rel="icon" href="https://images.icon-icons.com/317/PNG/512/calculator-icon_34473.png" type="image/png" />
+  <link rel="icon" href="https://calculadorahuellacarbono.github.io/favicon.png" type="image/png" />
   <style>
     body {
       background-color: #FFFFFF;
@@ -70,7 +70,7 @@
 <body>
 
   <h1>Mi Huella de Carbono COLBOYD</h1>
-  <h3>"Transforma tu huella, trasforma el planeta"</h3>
+  <h3>"Transforma tu huella, transforma el planeta"</h3>
 
   <div class="pregunta">
     <label>¿Cuántas veces a la semana usas carro?</label>
@@ -134,17 +134,14 @@
       const carne = parseInt(document.querySelector('input[name="carne"]:checked').value);
       const reciclaje = parseInt(document.querySelector('input[name="reciclaje"]:checked').value);
 
-      // Emisiones anuales por viaje/uso (en kg CO2)
-      const emisionesCarroAnualPorViaje = 2.415 * 52; // Toyota: 2.415 kg CO2 por viaje semanal * 52 semanas = 125.58 kg
-      const emisionesBusAnualPorViaje = 10 * 0.15 * 52; // Libertadores SAS Colombia: 10 km * 0.15 kg CO2/km * 52 semanas = 78 kg
-      const emisionesMotoAnualPorViaje = 15 * 0.046 * 52; // Yamaha: 15 km * 0.046 kg CO2/km * 52 semanas = 35.88 kg
+      const emisionesCarroAnualPorViaje = 2.415 * 52;
+      const emisionesBusAnualPorViaje = 10 * 0.15 * 52;
+      const emisionesMotoAnualPorViaje = 15 * 0.046 * 52;
 
-      // Emisiones de luz según EBSA S.A. ESP (kg CO2 anuales)
-      const emisionesLuz = [0, 350, 700]; // Siempre, Casi siempre, Nunca
+      const emisionesLuz = [0, 350, 700];
       const luz = emisionesLuz[luzSeleccionada];
 
-      // Emisiones reciclaje (kg CO2 anuales)
-      const emisionesReciclaje = [0, 150, 300]; // Siempre, Algunas veces, Nunca
+      const emisionesReciclaje = [0, 150, 300];
       const rec = emisionesReciclaje[reciclaje];
 
       // Cálculo total en kg CO2
@@ -153,8 +150,8 @@
         bus * emisionesBusAnualPorViaje +
         moto * emisionesMotoAnualPorViaje +
         luz +
-        carne * 900 +   // kg CO2 por consumo de carne (valor fijo)
-        ropa * 500 +    // kg CO2 por compra de ropa
+        carne * 900 +
+        ropa * 500 +
         rec;
 
       const totalToneladas = totalKg / 1000;
