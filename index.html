@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Calculadora de huella de carbono COLBOYD</title>
-  <link rel="icon" href="https://images.icon-icons.com/317/PNG/512/calculator-icon_34473.png" type="image/png">
+  <link rel="icon" href="https://images.icon-icons.com/317/PNG/512/calculator-icon_34473.png" type="image/png" />
   <style>
     body {
       background-color: #FFFFFF;
@@ -16,7 +15,7 @@
     }
     h1 {
       text-align: center;
-      color: #000000 ;
+      color: #000000;
     }
     h3 {
       text-align: center;
@@ -75,38 +74,48 @@
 
   <div class="pregunta">
     <label>¿Cuántas veces a la semana usas carro?</label>
-    <input type="number" id="carro" min="0" max="7" value="0">
+    <input type="number" id="carro" min="0" max="7" value="0" />
   </div>
 
   <div class="pregunta">
     <label>¿Cuántas veces a la semana usas bus?</label>
-    <input type="number" id="bus" min="0" max="7" value="0">
+    <input type="number" id="bus" min="0" max="7" value="0" />
   </div>
 
   <div class="pregunta">
     <label>¿Cuántas veces a la semana usas moto?</label>
-    <input type="number" id="moto" min="0" max="7" value="0">
+    <input type="number" id="moto" min="0" max="7" value="0" />
   </div>
+
   <div class="pregunta">
     <label>¿Cuántas veces al mes compras ropa nueva?</label>
-    <input type="number" id="ropa" min="0" max="30" value="0">
+    <input type="number" id="ropa" min="0" max="30" value="0" />
   </div>
 
   <div class="pregunta">
     <label>¿Apagas las luces cuando no las necesitas?</label>
     <div class="opciones">
-      <input type="radio" name="luz" value="0" checked> Siempre<br>
-      <input type="radio" name="luz" value="1"> Casi siempre<br>
-      <input type="radio" name="luz" value="2"> Nunca
+      <input type="radio" name="luz" value="0" checked /> Siempre<br />
+      <input type="radio" name="luz" value="1" /> Casi siempre<br />
+      <input type="radio" name="luz" value="2" /> Nunca
+    </div>
+  </div>
+
+  <div class="pregunta">
+    <label>¿Reciclas en casa?</label>
+    <div class="opciones">
+      <input type="radio" name="reciclaje" value="0" checked /> Siempre<br />
+      <input type="radio" name="reciclaje" value="1" /> Algunas veces<br />
+      <input type="radio" name="reciclaje" value="2" /> Nunca
     </div>
   </div>
 
   <div class="pregunta">
     <label>¿Comes carne todos los días?</label>
     <div class="opciones">
-      <input type="radio" name="carne" value="2" checked> Siempre<br>
-      <input type="radio" name="carne" value="1"> Casi siempre<br>
-      <input type="radio" name="carne" value="0"> Nunca
+      <input type="radio" name="carne" value="2" checked /> Siempre<br />
+      <input type="radio" name="carne" value="1" /> Casi siempre<br />
+      <input type="radio" name="carne" value="0" /> Nunca
     </div>
   </div>
 
@@ -117,20 +126,36 @@
   <script>
     function calcular() {
       const carro = parseInt(document.getElementById("carro").value);
-      const bus   = parseInt(document.getElementById("bus").value);
-      const moto  = parseInt(document.getElementById("moto").value);
-      const ropa  = parseInt(document.getElementById("ropa").value);
+      const bus = parseInt(document.getElementById("bus").value);
+      const moto = parseInt(document.getElementById("moto").value);
+      const ropa = parseInt(document.getElementById("ropa").value);
 
-      const luz = parseInt(document.querySelector('input[name="luz"]:checked').value);
+      const luzSeleccionada = parseInt(document.querySelector('input[name="luz"]:checked').value);
       const carne = parseInt(document.querySelector('input[name="carne"]:checked').value);
+      const reciclaje = parseInt(document.querySelector('input[name="reciclaje"]:checked').value);
 
-      const totalKg = 
-        carro * 150 +
-        bus   * 80  +
-        moto  * 100  +
-        luz   * 700  +
-        carne * 900  +
-        ropa  * 500;
+      // Emisiones anuales por viaje/uso (en kg CO2)
+      const emisionesCarroAnualPorViaje = 2.415 * 52; // Toyota: 2.415 kg CO2 por viaje semanal * 52 semanas = 125.58 kg
+      const emisionesBusAnualPorViaje = 10 * 0.15 * 52; // Libertadores SAS Colombia: 10 km * 0.15 kg CO2/km * 52 semanas = 78 kg
+      const emisionesMotoAnualPorViaje = 15 * 0.046 * 52; // Yamaha: 15 km * 0.046 kg CO2/km * 52 semanas = 35.88 kg
+
+      // Emisiones de luz según EBSA S.A. ESP (kg CO2 anuales)
+      const emisionesLuz = [0, 350, 700]; // Siempre, Casi siempre, Nunca
+      const luz = emisionesLuz[luzSeleccionada];
+
+      // Emisiones reciclaje (kg CO2 anuales)
+      const emisionesReciclaje = [0, 150, 300]; // Siempre, Algunas veces, Nunca
+      const rec = emisionesReciclaje[reciclaje];
+
+      // Cálculo total en kg CO2
+      const totalKg =
+        carro * emisionesCarroAnualPorViaje +
+        bus * emisionesBusAnualPorViaje +
+        moto * emisionesMotoAnualPorViaje +
+        luz +
+        carne * 900 +   // kg CO2 por consumo de carne (valor fijo)
+        ropa * 500 +    // kg CO2 por compra de ropa
+        rec;
 
       const totalToneladas = totalKg / 1000;
       const media = 7.0;
