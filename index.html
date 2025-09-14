@@ -88,11 +88,6 @@
   </div>
 
   <div class="pregunta">
-    <label>¿Cuántas veces al mes compras ropa nueva?</label>
-    <input type="number" id="ropa" min="0" max="30" value="0" />
-  </div>
-  
-  <div class="pregunta">
     <label>¿Reciclas en casa?</label>
     <div class="opciones">
       <input type="radio" name="reciclaje" value="0" checked /> Siempre<br />
@@ -128,7 +123,6 @@
       const carro = parseInt(document.getElementById("carro").value);
       const bus = parseInt(document.getElementById("bus").value);
       const moto = parseInt(document.getElementById("moto").value);
-      const ropa = parseInt(document.getElementById("ropa").value);
 
       const luzSeleccionada = parseInt(document.querySelector('input[name="luz"]:checked').value);
       const carne = parseInt(document.querySelector('input[name="carne"]:checked').value);
@@ -151,7 +145,6 @@
         moto * emisionesMotoAnualPorViaje +
         luz +
         carne * 900 +
-        ropa * 500 +
         rec;
 
       const totalToneladas = totalKg / 1000;
