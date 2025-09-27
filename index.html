@@ -7,7 +7,7 @@
     body {
       background-color: #FFFFFF;
       font-family: 'Comic Sans MS', sans-serif;
-      max-width: 900px;
+      max-width: 800px;
       margin: auto;
       padding: 20px;
       border-radius: 15px;
@@ -16,25 +16,18 @@
       text-align: center;
       color: #000000;
     }
-
     .pregunta {
       background-color: #c8e6c9;
       padding: 15px;
       border-radius: 10px;
       margin-top: 20px;
     }
-
-    /* Pregunta (texto) */
     label {
       font-size: 18px;
       margin-bottom: 10px;
       display: block;
     }
-
-    /* inputs y selects normales (NO incluir .opciones aquí) */
-    input[type="text"],
-    input[type="number"],
-    select {
+    input, select, .opciones {
       font-size: 16px;
       padding: 8px;
       border-radius: 8px;
@@ -43,32 +36,9 @@
       width: calc(100% - 16px);
       box-sizing: border-box;
     }
-    .opciones {
-      margin-top: 8px;
-      width: auto; 
-      padding: 0;
-    }
     .opciones input {
       margin-right: 10px;
     }
-    .opciones.verticales {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 2px;
-      margin-top: 5px;
-    }
-    .opciones.verticales label {
-      font-size: 16px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      white-space: nowrap;
-      cursor: pointer;
-      padding: 0;
-      border-radius: 0;
-    }
-
     button {
       margin-top: 30px;
       padding: 12px;
@@ -83,7 +53,6 @@
     button:hover {
       background-color: #42a5f5;
     }
-
     #resultado {
       margin-top: 30px;
       background-color: #c8e6c9;
@@ -92,6 +61,22 @@
       font-size: 18px;
       border: 1px solid #388e3c;
       white-space: pre-wrap;
+    }
+    .opciones.verticales {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px; /* menos espacio entre opciones */
+      margin-top: 5px;
+    }
+    .opciones.verticales label {
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      margin: 0;
+      padding: 0;
     }
   </style>
 </head>
@@ -182,28 +167,25 @@
     }
 
     async function calcular() {
-      const tipo = document.getElementById("tipoUsuario").value;
+      const tipoUsuario = document.getElementById("tipoUsuario").value;
       const nombre = document.getElementById("nombre").value.trim();
       const profesion = document.getElementById("profesion").value.trim();
       const grado = document.getElementById("grado").value.trim();
       const grupo = document.getElementById("grupo").value.trim();
 
-      if (!tipo) {
+      if (!tipoUsuario) {
         alert("Por favor, selecciona si eres profesional o estudiante.");
         return;
       }
-
       if (!nombre) {
         alert("Por favor, ingresa tu nombre completo.");
         return;
       }
-
-      if (tipo === "profesional" && !profesion) {
+      if (tipoUsuario === "profesional" && !profesion) {
         alert("Por favor, ingresa tu profesión.");
         return;
       }
-
-      if (tipo === "estudiante" && (!grado || !grupo)) {
+      if (tipoUsuario === "estudiante" && (!grado || !grupo)) {
         alert("Por favor, ingresa tu grado y grupo.");
         return;
       }
@@ -211,19 +193,9 @@
       const carro = parseInt(document.getElementById("carro").value) || 0;
       const bus = parseInt(document.getElementById("bus").value) || 0;
       const moto = parseInt(document.getElementById("moto").value) || 0;
-
-      const luzElem = document.querySelector('input[name="luz"]:checked');
-      const carneElem = document.querySelector('input[name="carne"]:checked');
-      const reciclajeElem = document.querySelector('input[name="reciclaje"]:checked');
-
-      if (!luzElem || !carneElem || !reciclajeElem) {
-        alert("Por favor, selecciona todas las opciones: reciclaje, luz y carne.");
-        return;
-      }
-
-      const luzSeleccionada = parseInt(luzElem.value);
-      const carne = parseInt(carneElem.value);
-      const reciclaje = parseInt(reciclajeElem.value);
+      const luzSeleccionada = parseInt(document.querySelector('input[name="luz"]:checked').value);
+      const carne = parseInt(document.querySelector('input[name="carne"]:checked').value);
+      const reciclaje = parseInt(document.querySelector('input[name="reciclaje"]:checked').value);
 
       const emisionesCarroAnualPorViaje = 2.415 * 52;
       const emisionesBusAnualPorViaje = 10 * 0.15 * 52;
@@ -243,7 +215,6 @@
       const media = 1.6;
 
       let resultado = `${nombre}, tu huella de carbono anual es de ${totalToneladas.toFixed(2)} toneladas de CO₂.\n\n`;
-
       if (totalToneladas < media) {
         resultado += "¡Estás por debajo del promedio de Colombia (1.6 t por persona)! Muy bien cuidando el planeta.";
       } else if (totalToneladas > media) {
@@ -255,8 +226,8 @@
       document.getElementById("resultado").textContent = resultado;
 
       const datosParaEnviar = {
-        tipo: tipo,
-        nombre: tipo === "profesional" ? "Profesional " + nombre : nombre,
+        tipoUsuario: tipoUsuario,
+        nombre: tipoUsuario === "profesional" ? "Profesional " + nombre : nombre,
         profesion: profesion,
         grado: grado,
         grupo: grupo,
@@ -264,17 +235,19 @@
         bus: bus,
         moto: moto,
         reciclaje: reciclaje,
-        luz: luzSeleccionada,
+        luzSeleccionada: luzSeleccionada,
         carne: carne,
         resultado: resultado
       };
 
       try {
-        await fetch(URL_APPS_SCRIPT, {
+        const respuesta = await fetch(URL_APPS_SCRIPT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(datosParaEnviar)
         });
+        const result = await respuesta.text();
+        console.log("Respuesta Apps Script:", result);
       } catch (error) {
         console.error("Error al enviar datos:", error);
       }
