@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Calculadora de huella de carbono COLBOYD</title>
   <link rel="icon" href="https://calculadorahuellacarbono.github.io/favicon_vi.png" type="image/png" />
+  <script src="https://unpkg.com/docx@8.3.0/build/index.umd.js"></script>
   <style>
     body {
       background-color: #FFFFFF;
@@ -13,13 +14,13 @@
       padding: 20px;
       border-radius: 15px;
     }
-    h1 {
+    h1, h3 {
       text-align: center;
       color: #000000;
     }
     h3 {
-      text-align: center;
-      color: #000000;
+      margin-top: 0;
+      margin-bottom: 20px;
     }
     .pregunta {
       background-color: #c8e6c9;
@@ -32,7 +33,7 @@
       margin-bottom: 10px;
       display: block;
     }
-    input[type="number"], .opciones {
+    input[type="number"], input[type="text"], .opciones {
       font-size: 16px;
       padding: 8px;
       border-radius: 8px;
@@ -68,22 +69,49 @@
   </style>
 </head>
 <body>
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+    <div style="flex: 1; display: flex; justify-content: flex-start;">
+      <img src="https://calculadorahuellacarbono.github.io/favicon_CBD.jpg" alt="Logo COLBOYD" style="width: 130px; height: auto;" />
+    </div>
+    <div style="flex: 1; display: flex; justify-content: center; align-items: center; gap: 20px;">
+      <img src="https://calculadorahuellacarbono.github.io/favicon_LB.jpg" alt="Logo Leptones BOY" style="width: 100px; height: auto;" />
+      <img src="https://calculadorahuellacarbono.github.io/favicon_vi.png" alt="Logo Vital Impact" style="width: 160px; height: auto;" />
+    </div>
+    <div style="flex: 1; display: flex; justify-content: flex-end;">
+      <img src="https://calculadorahuellacarbono.github.io/favicon_ME.png" alt="Logo MinEducación" style="width: 190px; height: auto;" />
+    </div>
+  </div>
 
   <h1>Mi Huella de Carbono COLBOYD</h1>
   <h3>"Transforma tu huella, transforma el planeta"</h3>
 
   <div class="pregunta">
-    <label>¿Cuántas veces a la semana usas carro?</label>
+    <label>Nombre completo:</label>
+    <input type="text" id="nombre" placeholder="Escribe tu nombre completo" />
+  </div>
+
+  <div class="pregunta">
+    <label>Grado:</label>
+    <input type="text" id="grado" placeholder="Ejemplo: 10°" />
+  </div>
+
+  <div class="pregunta">
+    <label>Grupo:</label>
+    <input type="text" id="grupo" placeholder="Ejemplo: 01, 02, etc." />
+  </div>
+
+  <div class="pregunta">
+    <label>¿Cuántas días a la semana usas carro?</label>
     <input type="number" id="carro" min="0" max="7" value="0" />
   </div>
 
   <div class="pregunta">
-    <label>¿Cuántas veces a la semana usas bus?</label>
+    <label>¿Cuántas días a la semana usas bus?</label>
     <input type="number" id="bus" min="0" max="7" value="0" />
   </div>
 
   <div class="pregunta">
-    <label>¿Cuántas veces a la semana usas moto?</label>
+    <label>¿Cuántas días a la semana usas moto?</label>
     <input type="number" id="moto" min="0" max="7" value="0" />
   </div>
 
@@ -119,11 +147,27 @@
   <div id="resultado"></div>
 
   <script>
+    let resultadoTexto = "";
+    let nombreGlobal = "";
+    let gradoGlobal = "";
+    let grupoGlobal = "";
+
     function calcular() {
+      const nombre = document.getElementById("nombre").value.trim();
+      const grado = document.getElementById("grado").value.trim();
+      const grupo = document.getElementById("grupo").value.trim();
+
+      if (!nombre) { alert("Por favor, ingresa tu nombre completo."); return; }
+      if (!grado) { alert("Por favor, ingresa tu grado."); return; }
+      if (!grupo) { alert("Por favor, ingresa tu grupo."); return; }
+
+      nombreGlobal = nombre;
+      gradoGlobal = grado;
+      grupoGlobal = grupo;
+
       const carro = parseInt(document.getElementById("carro").value);
       const bus = parseInt(document.getElementById("bus").value);
       const moto = parseInt(document.getElementById("moto").value);
-
       const luzSeleccionada = parseInt(document.querySelector('input[name="luz"]:checked').value);
       const carne = parseInt(document.querySelector('input[name="carne"]:checked').value);
       const reciclaje = parseInt(document.querySelector('input[name="reciclaje"]:checked').value);
@@ -131,38 +175,132 @@
       const emisionesCarroAnualPorViaje = 2.415 * 52;
       const emisionesBusAnualPorViaje = 10 * 0.15 * 52;
       const emisionesMotoAnualPorViaje = 15 * 0.046 * 52;
-
       const emisionesLuz = [0, 350, 700];
-      const luz = emisionesLuz[luzSeleccionada];
-
       const emisionesReciclaje = [0, 150, 300];
-      const rec = emisionesReciclaje[reciclaje];
 
-      // Cálculo total en kg CO2
       const totalKg =
         carro * emisionesCarroAnualPorViaje +
         bus * emisionesBusAnualPorViaje +
         moto * emisionesMotoAnualPorViaje +
-        luz +
+        emisionesLuz[luzSeleccionada] +
         carne * 900 +
-        rec;
+        emisionesReciclaje[reciclaje];
 
       const totalToneladas = totalKg / 1000;
-      const media = 7.0;
+      const media = 1.6;
 
-      let resultado = `<strong>Tu huella de carbono anual es de ${totalToneladas.toFixed(2)} toneladas de CO₂.</strong><br><br>`;
+      let resultado = `<strong>${nombre}, tu huella de carbono anual es de ${totalToneladas.toFixed(2)} toneladas de CO₂.</strong><br><br>`;
 
       if (totalToneladas < media) {
-        resultado += "¡Estás por debajo del promedio de Europa (7 t por persona en Europa)! Muy bien cuidando el planeta.";
+        resultado += " ¡Estás por debajo del promedio de Colombia (1.6 t por persona)! Muy bien cuidando el planeta.";
       } else if (totalToneladas > media) {
-        resultado += "Estás por encima del promedio de Europa (7 t por persona en Europa). Puedes mejorar con pequeños cambios.";
+        resultado += " Estás por encima del promedio de Colombia (1.6 t por persona). Puedes mejorar con pequeños cambios.";
       } else {
-        resultado += "Estás en el promedio de Europa (7 t por persona en Europa). ¡Vamos por un mundo más verde!";
+        resultado += " Estás en el promedio de Colombia (1.6 t por persona). ¡Vamos por un mundo más verde!";
       }
 
+      resultadoTexto = resultado;
       document.getElementById("resultado").innerHTML = resultado;
+
+      mostrarBotonDescarga();
+    }
+
+    function mostrarBotonDescarga() {
+      if (!document.getElementById("btnDescargar")) {
+        const btn = document.createElement("button");
+        btn.id = "btnDescargar";
+        btn.textContent = "Descargar DOCX";
+        btn.style.marginTop = "20px";
+        btn.onclick = descargarDOCX;
+        document.getElementById("resultado").appendChild(btn);
+      }
+    }
+
+    async function descargarDOCX() {
+      if (!resultadoTexto || !nombreGlobal || !gradoGlobal || !grupoGlobal) {
+        alert("Primero debes calcular tu huella de carbono.");
+        return;
+      }
+
+      const { Document, Packer, Paragraph, TextRun, AlignmentType, ImageRun, Table, TableRow, TableCell, WidthType, VerticalAlign } = window.docx;
+
+      async function fetchImage(url) {
+        const response = await fetch(url);
+        return await response.blob();
+      }
+
+      const logoColboyd = await fetchImage("https://calculadorahuellacarbono.github.io/favicon_CBD.jpg");
+      const logoLeptones = await fetchImage("https://calculadorahuellacarbono.github.io/favicon_LB.jpg");
+      const logoVitalImpact = await fetchImage("https://calculadorahuellacarbono.github.io/favicon_vi.png");
+      const logoMinEducacion = await fetchImage("https://calculadorahuellacarbono.github.io/favicon_ME.png");
+
+      const table = new Table({
+        rows: [
+          new TableRow({
+            children: [
+              new TableCell({
+                children: [new Paragraph({ children: [new ImageRun({ data: logoColboyd, transformation: { width: 80, height: 80 } })] })],
+                verticalAlign: VerticalAlign.CENTER,
+                width: { size: 33.3, type: WidthType.PERCENTAGE },
+              }),
+              new TableCell({
+                children: [new Paragraph({
+                  children: [
+                    new ImageRun({ data: logoLeptones, transformation: { width: 60, height: 60 } }),
+                    new TextRun("  "),
+                    new ImageRun({ data: logoVitalImpact, transformation: { width: 60, height: 60 } })
+                  ],
+                  alignment: AlignmentType.CENTER
+                })],
+                verticalAlign: VerticalAlign.CENTER,
+                width: { size: 33.3, type: WidthType.PERCENTAGE },
+              }),
+              new TableCell({
+                children: [new Paragraph({ children: [new ImageRun({ data: logoMinEducacion, transformation: { width: 120, height: 50 } })], alignment: AlignmentType.RIGHT })],
+                verticalAlign: VerticalAlign.CENTER,
+                width: { size: 33.3, type: WidthType.PERCENTAGE },
+              }),
+            ]
+          }),
+        ],
+        width: { size: 100, type: WidthType.PERCENTAGE },
+      });
+
+      const fecha = new Date();
+      const fechaTexto = fecha.toLocaleDateString("es-CO", { year: "numeric", month: "long", day: "numeric" }) + " " + fecha.toLocaleTimeString("es-CO");
+
+      const doc = new Document({
+        styles: {
+          default: {
+            document: {
+              run: { font: "Comic Sans MS" }
+            }
+          }
+        },
+        sections: [{
+          properties: {},
+          children: [
+            table,
+            new Paragraph({ children: [new TextRun({ text: "Mi Huella de Carbono COLBOYD", bold: true, size: 28 })], alignment: AlignmentType.CENTER, spacing: { after: 200 } }),
+            new Paragraph({ text: '"Transforma tu huella, transforma el planeta"', italics: true, alignment: AlignmentType.CENTER, spacing: { after: 300 } }),
+            new Paragraph({ children: [new TextRun({ text: `Nombre: ${nombreGlobal}`, size: 24, bold: true })] }),
+            new Paragraph({ children: [new TextRun({ text: `Grado: ${gradoGlobal}`, size: 24, bold: true })] }),
+            new Paragraph({ children: [new TextRun({ text: `Grupo: ${grupoGlobal}`, size: 24, bold: true })], spacing: { after: 200 } }),
+            new Paragraph({ children: [new TextRun({ text: resultadoTexto.replace(/<[^>]+>/g, ''), size: 22 })], spacing: { after: 300 } }),
+            new Paragraph({ text: `Fecha y hora de impresión: ${fechaTexto}`, size: 20 })
+          ]
+        }]
+      });
+
+      const blob = await Packer.toBlob(doc);
+      const nombreArchivo = `HuellaCarbono_${nombreGlobal.replace(/\s+/g, "_")}.docx`;
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = nombreArchivo;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   </script>
-
 </body>
 </html>
