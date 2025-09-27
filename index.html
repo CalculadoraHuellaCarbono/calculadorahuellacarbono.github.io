@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Calculadora de huella de carbono COLBOYD</title>
+  <link rel="icon" href="https://calculadorahuellacarbono.github.io/favicon_vi.png" type="image/png">
   <style>
     body {
       background-color: #FFFFFF;
@@ -27,7 +28,9 @@
       margin-bottom: 10px;
       display: block;
     }
-    input, select, .opciones {
+    input[type="text"],
+    input[type="number"],
+    select {
       font-size: 16px;
       padding: 8px;
       border-radius: 8px;
@@ -36,8 +39,21 @@
       width: calc(100% - 16px);
       box-sizing: border-box;
     }
-    .opciones input {
-      margin-right: 10px;
+    .opciones.verticales {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      margin-top: 5px;
+    }
+    .opciones.verticales label {
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      margin: 0;
+      padding: 0;
     }
     button {
       margin-top: 30px;
@@ -62,22 +78,6 @@
       border: 1px solid #388e3c;
       white-space: pre-wrap;
     }
-    .opciones.verticales {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 2px; /* menos espacio entre opciones */
-      margin-top: 5px;
-    }
-    .opciones.verticales label {
-      font-size: 16px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      margin: 0;
-      padding: 0;
-    }
   </style>
 </head>
 <body>
@@ -85,128 +85,136 @@
   <h1>Mi Huella de Carbono COLBOYD</h1>
   <h3>"Transforma tu huella, transforma el planeta"</h3>
 
-  <div class="pregunta">
-    <label>¿Eres estudiante o profesional?</label>
-    <select id="tipoUsuario" onchange="cambiarTipo()">
-      <option value="">-Seleccione Uno-</option>
-      <option value="profesional">Profesional</option>
-      <option value="estudiante">Estudiante</option>
-    </select>
-  </div>
+  <form id="formCalc" 
+        action="https://script.google.com/macros/s/AKfycbwfiscv5FZw8J809TLKMf_0alSWhK2CBVCg39is7O5CCegc_8NZBzdVpl0unH7MBCsh/exec" 
+        method="GET" 
+        target="_blank" 
+        onsubmit="return prepararYEnviar();">
 
-  <div class="pregunta">
-    <label>Nombre completo:</label>
-    <input type="text" id="nombre" placeholder="Escribe tu nombre completo" />
-  </div>
-
-  <div class="pregunta" id="divProfesional" style="display: none;">
-    <label>Profesión:</label>
-    <input type="text" id="profesion" placeholder="Ejemplo: Ingeniero, Profesor" />
-  </div>
-
-  <div class="pregunta" id="divEstudiante" style="display: none;">
-    <label>Grado:</label>
-    <input type="text" id="grado" placeholder="Ejemplo: 10°" />
-    <label>Grupo:</label>
-    <input type="text" id="grupo" placeholder="Ejemplo: A" />
-  </div>
-
-  <div class="pregunta">
-    <label>¿Cuántos días a la semana usas carro?</label>
-    <input type="number" id="carro" min="0" max="7" value="" />
-  </div>
-
-  <div class="pregunta">
-    <label>¿Cuántos días a la semana usas bus?</label>
-    <input type="number" id="bus" min="0" max="7" value="" />
-  </div>
-
-  <div class="pregunta">
-    <label>¿Cuántos días a la semana usas moto?</label>
-    <input type="number" id="moto" min="0" max="7" value="" />
-  </div>
-
-  <div class="pregunta">
-    <label>¿Reciclas en casa?</label>
-    <div class="opciones verticales">
-      <label><input type="radio" name="reciclaje" value="0"> Siempre</label>
-      <label><input type="radio" name="reciclaje" value="1"> Algunas veces</label>
-      <label><input type="radio" name="reciclaje" value="2"> Nunca</label>
+    <div class="pregunta">
+      <label>¿Eres estudiante o profesional?</label>
+      <select id="tipoUsuario" name="tipoUsuario" onchange="cambiarTipo()">
+        <option value="">-Seleccione Uno-</option>
+        <option value="profesional">Profesional</option>
+        <option value="estudiante">Estudiante</option>
+      </select>
     </div>
-  </div>
 
-  <div class="pregunta">
-    <label>¿Apagas las luces cuando no las usas?</label>
-    <div class="opciones verticales">
-      <label><input type="radio" name="luz" value="0"> Siempre</label>
-      <label><input type="radio" name="luz" value="1"> Algunas veces</label>
-      <label><input type="radio" name="luz" value="2"> Nunca</label>
+    <div class="pregunta">
+      <label>Nombre completo:</label>
+      <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre completo" />
     </div>
-  </div>
 
-  <div class="pregunta">
-    <label>¿Consumes carne?</label>
-    <div class="opciones verticales">
-      <label><input type="radio" name="carne" value="0"> Siempre</label>
-      <label><input type="radio" name="carne" value="1"> Algunas veces</label>
-      <label><input type="radio" name="carne" value="2"> Nunca</label>
+    <div class="pregunta" id="divProfesional" style="display: none;">
+      <label>Profesión:</label>
+      <input type="text" id="profesion" name="profesion" placeholder="Ejemplo: Ingeniero, Profesor" />
     </div>
-  </div>
 
-  <button onclick="calcular()">Calcular mi huella</button>
+    <div class="pregunta" id="divEstudiante" style="display: none;">
+      <label>Grado:</label>
+      <input type="text" id="grado" name="grado" placeholder="Ejemplo: 10" />
+      <label>Grupo:</label>
+      <input type="text" id="grupo" name="grupo" placeholder="Ejemplo: 01" />
+    </div>
+
+    <div class="pregunta">
+      <label>¿Cuántos días a la semana usas carro?</label>
+      <input type="number" id="carro" name="carro" min="0" max="7" />
+    </div>
+
+    <div class="pregunta">
+      <label>¿Cuántos días a la semana usas bus?</label>
+      <input type="number" id="bus" name="bus" min="0" max="7" />
+    </div>
+
+    <div class="pregunta">
+      <label>¿Cuántos días a la semana usas moto?</label>
+      <input type="number" id="moto" name="moto" min="0" max="7" />
+    </div>
+
+    <div class="pregunta">
+      <label>¿Reciclas en casa?</label>
+      <div class="opciones verticales">
+        <label><input type="radio" name="reciclaje" value="0"> Siempre</label>
+        <label><input type="radio" name="reciclaje" value="1"> Algunas veces</label>
+        <label><input type="radio" name="reciclaje" value="2"> Nunca</label>
+      </div>
+    </div>
+
+    <div class="pregunta">
+      <label>¿Apagas las luces cuando no las usas?</label>
+      <div class="opciones verticales">
+        <label><input type="radio" name="luzSeleccionada" value="0"> Siempre</label>
+        <label><input type="radio" name="luzSeleccionada" value="1"> Algunas veces</label>
+        <label><input type="radio" name="luzSeleccionada" value="2"> Nunca</label>
+      </div>
+    </div>
+
+    <div class="pregunta">
+      <label>¿Consumes carne todos los días?</label>
+      <div class="opciones verticales">
+        <label><input type="radio" name="carne" value="2"> Siempre</label>
+        <label><input type="radio" name="carne" value="1"> Algunas veces</label>
+        <label><input type="radio" name="carne" value="0"> Nunca</label>
+      </div>
+    </div>
+
+    <button type="submit">Calcular y enviar</button>
+  </form>
 
   <div id="resultado"></div>
 
   <script>
-    const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbyjPuvNj0fj-iwcbvc_NFsi2VAWCe93Fre41AY9CLQwdnsd3Wec5PqyxFCwh6E5SOny/exec";
-
     function cambiarTipo() {
       const tipo = document.getElementById("tipoUsuario").value;
       document.getElementById("divProfesional").style.display = tipo === "profesional" ? "block" : "none";
       document.getElementById("divEstudiante").style.display = tipo === "estudiante" ? "block" : "none";
     }
 
-    async function calcular() {
-      const tipoUsuario = document.getElementById("tipoUsuario").value;
+    function prepararYEnviar() {
+      const tipo = document.getElementById("tipoUsuario").value.trim();
       const nombre = document.getElementById("nombre").value.trim();
-      const profesion = document.getElementById("profesion").value.trim();
-      const grado = document.getElementById("grado").value.trim();
-      const grupo = document.getElementById("grupo").value.trim();
 
-      if (!tipoUsuario) {
-        alert("Por favor, selecciona si eres profesional o estudiante.");
-        return;
+      if (!tipo) { alert("Por favor, selecciona si eres profesional o estudiante."); return false; }
+      if (!nombre) { alert("Por favor, ingresa tu nombre completo."); return false; }
+
+      if (tipo === "profesional") {
+        const prof = document.getElementById("profesion").value.trim();
+        if (!prof) { alert("Por favor, ingresa tu profesión."); return false; }
       }
-      if (!nombre) {
-        alert("Por favor, ingresa tu nombre completo.");
-        return;
-      }
-      if (tipoUsuario === "profesional" && !profesion) {
-        alert("Por favor, ingresa tu profesión.");
-        return;
-      }
-      if (tipoUsuario === "estudiante" && (!grado || !grupo)) {
-        alert("Por favor, ingresa tu grado y grupo.");
-        return;
+      if (tipo === "estudiante") {
+        const grado = document.getElementById("grado").value.trim();
+        const grupo = document.getElementById("grupo").value.trim();
+        if (!grado || !grupo) { alert("Por favor, ingresa grado y grupo."); return false; }
       }
 
       const carro = parseInt(document.getElementById("carro").value) || 0;
       const bus = parseInt(document.getElementById("bus").value) || 0;
       const moto = parseInt(document.getElementById("moto").value) || 0;
-      const luzSeleccionada = parseInt(document.querySelector('input[name="luz"]:checked').value);
-      const carne = parseInt(document.querySelector('input[name="carne"]:checked').value);
-      const reciclaje = parseInt(document.querySelector('input[name="reciclaje"]:checked').value);
 
-      const emisionesCarroAnualPorViaje = 2.415 * 52;
-      const emisionesBusAnualPorViaje = 10 * 0.15 * 52;
-      const emisionesMotoAnualPorViaje = 15 * 0.046 * 52;
+      const luzRadio = document.querySelector('input[name="luzSeleccionada"]:checked');
+      const reciclajeRadio = document.querySelector('input[name="reciclaje"]:checked');
+      const carneRadio = document.querySelector('input[name="carne"]:checked');
+
+      if (!luzRadio || !reciclajeRadio || !carneRadio) {
+        alert("Por favor selecciona todas las opciones (luz, reciclaje, carne).");
+        return false;
+      }
+
+      const luzSeleccionada = parseInt(luzRadio.value);
+      const reciclaje = parseInt(reciclajeRadio.value);
+      const carne = parseInt(carneRadio.value);
+
+      const emisionesCarro = 2.415 * 52;
+      const emisionesBus = 10 * 0.15 * 52;
+      const emisionesMoto = 15 * 0.046 * 52;
       const emisionesLuz = [0, 350, 700];
       const emisionesReciclaje = [0, 150, 300];
 
       const totalKg =
-        carro * emisionesCarroAnualPorViaje +
-        bus * emisionesBusAnualPorViaje +
-        moto * emisionesMotoAnualPorViaje +
+        carro * emisionesCarro +
+        bus * emisionesBus +
+        moto * emisionesMoto +
         emisionesLuz[luzSeleccionada] +
         carne * 900 +
         emisionesReciclaje[reciclaje];
@@ -214,43 +222,24 @@
       const totalToneladas = totalKg / 1000;
       const media = 1.6;
 
-      let resultado = `${nombre}, tu huella de carbono anual es de ${totalToneladas.toFixed(2)} toneladas de CO₂.\n\n`;
+      let mensaje = `${nombre}, tu huella de carbono anual es de ${totalToneladas.toFixed(2)} toneladas de CO₂.\n\n`;
       if (totalToneladas < media) {
-        resultado += "¡Estás por debajo del promedio de Colombia (1.6 t por persona)! Muy bien cuidando el planeta.";
+        mensaje += "¡Estás por debajo del promedio de Colombia (1.6 t por persona)! Muy bien cuidando el planeta.";
       } else if (totalToneladas > media) {
-        resultado += "Estás por encima del promedio de Colombia (1.6 t por persona). Puedes mejorar con pequeños cambios.";
+        mensaje += "Estás por encima del promedio de Colombia (1.6 t por persona). Puedes mejorar con pequeños cambios.";
       } else {
-        resultado += "Estás justo en el promedio de Colombia (1.6 t por persona).";
+        mensaje += "Estás justo en el promedio de Colombia (1.6 t por persona).";
       }
 
-      document.getElementById("resultado").textContent = resultado;
+      document.getElementById("resultado").textContent = mensaje;
 
-      const datosParaEnviar = {
-        tipoUsuario: tipoUsuario,
-        nombre: tipoUsuario === "profesional" ? "Profesional " + nombre : nombre,
-        profesion: profesion,
-        grado: grado,
-        grupo: grupo,
-        carro: carro,
-        bus: bus,
-        moto: moto,
-        reciclaje: reciclaje,
-        luzSeleccionada: luzSeleccionada,
-        carne: carne,
-        resultado: resultado
-      };
+      let campoRes = document.createElement("input");
+      campoRes.type = "hidden";
+      campoRes.name = "resultado";
+      campoRes.value = mensaje;
+      document.getElementById("formCalc").appendChild(campoRes);
 
-      try {
-        const respuesta = await fetch(URL_APPS_SCRIPT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(datosParaEnviar)
-        });
-        const result = await respuesta.text();
-        console.log("Respuesta Apps Script:", result);
-      } catch (error) {
-        console.error("Error al enviar datos:", error);
-      }
+      return true;
     }
   </script>
 </body>
