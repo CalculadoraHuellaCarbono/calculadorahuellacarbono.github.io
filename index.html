@@ -177,12 +177,6 @@
   <div id="resultado"></div>
 
   <script>
-    function cambiarTipo() {
-      const tipo = document.getElementById("tipoUsuario").value;
-      document.getElementById("divProfesional").style.display = tipo === "profesional" ? "block" : "none";
-      document.getElementById("divEstudiante").style.display = tipo === "estudiante" ? "block" : "none";
-    }
-
     function prepararYEnviar() {
       const tipo = document.getElementById("tipoUsuario").value.trim();
       const nombre = document.getElementById("nombre").value.trim();
@@ -248,7 +242,7 @@
       let campoRes = document.createElement("input");
       campoRes.type = "hidden";
       campoRes.name = "resultado";
-      campoRes.value = mensaje;
+      campoRes.value = totalToneladas.toFixed(2) + " t"; 
       document.getElementById("formCalc").appendChild(campoRes);
 
       return true;
