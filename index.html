@@ -3,13 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <title>Calculadora de huella de carbono COLBOYD</title>
-  <link rel="icon" href="https://calculadorahuellacarbono.github.io/favicon_vi.png" type="image/png" />
-  <script src="https://unpkg.com/docx@8.3.0/build/index.umd.js"></script>
   <style>
     body {
       background-color: #FFFFFF;
       font-family: 'Comic Sans MS', sans-serif;
-      max-width: 800px;
+      max-width: 900px;
       margin: auto;
       padding: 20px;
       border-radius: 15px;
@@ -18,32 +16,59 @@
       text-align: center;
       color: #000000;
     }
-    h3 {
-      margin-top: 0;
-      margin-bottom: 20px;
-    }
+
     .pregunta {
       background-color: #c8e6c9;
       padding: 15px;
       border-radius: 10px;
       margin-top: 20px;
     }
+
+    /* Pregunta (texto) */
     label {
       font-size: 18px;
       margin-bottom: 10px;
       display: block;
     }
-    input[type="number"], input[type="text"], .opciones {
+
+    /* inputs y selects normales (NO incluir .opciones aquí) */
+    input[type="text"],
+    input[type="number"],
+    select {
       font-size: 16px;
       padding: 8px;
       border-radius: 8px;
       margin-top: 8px;
       display: block;
-      width: 100%;
+      width: calc(100% - 16px);
+      box-sizing: border-box;
+    }
+    .opciones {
+      margin-top: 8px;
+      width: auto; 
+      padding: 0;
     }
     .opciones input {
       margin-right: 10px;
     }
+    .opciones.verticales {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      margin-top: 5px;
+    }
+    .opciones.verticales label {
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      cursor: pointer;
+      padding: 0;
+      border-radius: 0;
+    }
+
     button {
       margin-top: 30px;
       padding: 12px;
@@ -58,6 +83,7 @@
     button:hover {
       background-color: #42a5f5;
     }
+
     #resultado {
       margin-top: 30px;
       background-color: #c8e6c9;
@@ -65,80 +91,80 @@
       border-radius: 10px;
       font-size: 18px;
       border: 1px solid #388e3c;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
-    <div style="flex: 1; display: flex; justify-content: flex-start;">
-      <img src="https://calculadorahuellacarbono.github.io/favicon_CBD.jpg" alt="Logo COLBOYD" style="width: 130px; height: auto;" />
-    </div>
-    <div style="flex: 1; display: flex; justify-content: center; align-items: center; gap: 20px;">
-      <img src="https://calculadorahuellacarbono.github.io/favicon_LB.jpg" alt="Logo Leptones BOY" style="width: 100px; height: auto;" />
-      <img src="https://calculadorahuellacarbono.github.io/favicon_vi.png" alt="Logo Vital Impact" style="width: 160px; height: auto;" />
-    </div>
-    <div style="flex: 1; display: flex; justify-content: flex-end;">
-      <img src="https://calculadorahuellacarbono.github.io/favicon_ME.png" alt="Logo MinEducación" style="width: 190px; height: auto;" />
-    </div>
-  </div>
 
   <h1>Mi Huella de Carbono COLBOYD</h1>
   <h3>"Transforma tu huella, transforma el planeta"</h3>
+
+  <div class="pregunta">
+    <label>¿Eres estudiante o profesional?</label>
+    <select id="tipoUsuario" onchange="cambiarTipo()">
+      <option value="">-Seleccione Uno-</option>
+      <option value="profesional">Profesional</option>
+      <option value="estudiante">Estudiante</option>
+    </select>
+  </div>
 
   <div class="pregunta">
     <label>Nombre completo:</label>
     <input type="text" id="nombre" placeholder="Escribe tu nombre completo" />
   </div>
 
-  <div class="pregunta">
+  <div class="pregunta" id="divProfesional" style="display: none;">
+    <label>Profesión:</label>
+    <input type="text" id="profesion" placeholder="Ejemplo: Ingeniero, Profesor" />
+  </div>
+
+  <div class="pregunta" id="divEstudiante" style="display: none;">
     <label>Grado:</label>
     <input type="text" id="grado" placeholder="Ejemplo: 10°" />
-  </div>
-
-  <div class="pregunta">
     <label>Grupo:</label>
-    <input type="text" id="grupo" placeholder="Ejemplo: 01, 02, etc." />
+    <input type="text" id="grupo" placeholder="Ejemplo: A" />
   </div>
 
   <div class="pregunta">
-    <label>¿Cuántas días a la semana usas carro?</label>
-    <input type="number" id="carro" min="0" max="7" value="0" />
+    <label>¿Cuántos días a la semana usas carro?</label>
+    <input type="number" id="carro" min="0" max="7" value="" />
   </div>
 
   <div class="pregunta">
-    <label>¿Cuántas días a la semana usas bus?</label>
-    <input type="number" id="bus" min="0" max="7" value="0" />
+    <label>¿Cuántos días a la semana usas bus?</label>
+    <input type="number" id="bus" min="0" max="7" value="" />
   </div>
 
   <div class="pregunta">
-    <label>¿Cuántas días a la semana usas moto?</label>
-    <input type="number" id="moto" min="0" max="7" value="0" />
+    <label>¿Cuántos días a la semana usas moto?</label>
+    <input type="number" id="moto" min="0" max="7" value="" />
   </div>
 
   <div class="pregunta">
     <label>¿Reciclas en casa?</label>
-    <div class="opciones">
-      <input type="radio" name="reciclaje" value="0" checked /> Siempre<br />
-      <input type="radio" name="reciclaje" value="1" /> Algunas veces<br />
-      <input type="radio" name="reciclaje" value="2" /> Nunca
+    <div class="opciones verticales">
+      <label><input type="radio" name="reciclaje" value="0"> Siempre</label>
+      <label><input type="radio" name="reciclaje" value="1"> Algunas veces</label>
+      <label><input type="radio" name="reciclaje" value="2"> Nunca</label>
     </div>
   </div>
 
   <div class="pregunta">
-    <label>¿Apagas las luces cuando no las necesitas?</label>
-    <div class="opciones">
-      <input type="radio" name="luz" value="0" checked /> Siempre<br />
-      <input type="radio" name="luz" value="1" /> Casi siempre<br />
-      <input type="radio" name="luz" value="2" /> Nunca
+    <label>¿Apagas las luces cuando no las usas?</label>
+    <div class="opciones verticales">
+      <label><input type="radio" name="luz" value="0"> Siempre</label>
+      <label><input type="radio" name="luz" value="1"> Algunas veces</label>
+      <label><input type="radio" name="luz" value="2"> Nunca</label>
     </div>
   </div>
 
   <div class="pregunta">
-    <label>¿Comes carne todos los días?</label>
-    <div class="opciones">
-      <input type="radio" name="carne" value="2" checked /> Siempre<br />
-      <input type="radio" name="carne" value="1" /> Casi siempre<br />
-      <input type="radio" name="carne" value="0" /> Nunca
+    <label>¿Consumes carne?</label>
+    <div class="opciones verticales">
+      <label><input type="radio" name="carne" value="0"> Siempre</label>
+      <label><input type="radio" name="carne" value="1"> Algunas veces</label>
+      <label><input type="radio" name="carne" value="2"> Nunca</label>
     </div>
   </div>
 
@@ -147,30 +173,57 @@
   <div id="resultado"></div>
 
   <script>
-    let resultadoTexto = "";
-    let nombreGlobal = "";
-    let gradoGlobal = "";
-    let grupoGlobal = "";
+    const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbz9Shqe7gEGbG5xjiyJ4C4XgPSw83jz4hiiCQL5YDaCbwVZGodoftlpnyzOaKD_NgTq/exec";
 
-    function calcular() {
+    function cambiarTipo() {
+      const tipo = document.getElementById("tipoUsuario").value;
+      document.getElementById("divProfesional").style.display = tipo === "profesional" ? "block" : "none";
+      document.getElementById("divEstudiante").style.display = tipo === "estudiante" ? "block" : "none";
+    }
+
+    async function calcular() {
+      const tipo = document.getElementById("tipoUsuario").value;
       const nombre = document.getElementById("nombre").value.trim();
+      const profesion = document.getElementById("profesion").value.trim();
       const grado = document.getElementById("grado").value.trim();
       const grupo = document.getElementById("grupo").value.trim();
 
-      if (!nombre) { alert("Por favor, ingresa tu nombre completo."); return; }
-      if (!grado) { alert("Por favor, ingresa tu grado."); return; }
-      if (!grupo) { alert("Por favor, ingresa tu grupo."); return; }
+      if (!tipo) {
+        alert("Por favor, selecciona si eres profesional o estudiante.");
+        return;
+      }
 
-      nombreGlobal = nombre;
-      gradoGlobal = grado;
-      grupoGlobal = grupo;
+      if (!nombre) {
+        alert("Por favor, ingresa tu nombre completo.");
+        return;
+      }
 
-      const carro = parseInt(document.getElementById("carro").value);
-      const bus = parseInt(document.getElementById("bus").value);
-      const moto = parseInt(document.getElementById("moto").value);
-      const luzSeleccionada = parseInt(document.querySelector('input[name="luz"]:checked').value);
-      const carne = parseInt(document.querySelector('input[name="carne"]:checked').value);
-      const reciclaje = parseInt(document.querySelector('input[name="reciclaje"]:checked').value);
+      if (tipo === "profesional" && !profesion) {
+        alert("Por favor, ingresa tu profesión.");
+        return;
+      }
+
+      if (tipo === "estudiante" && (!grado || !grupo)) {
+        alert("Por favor, ingresa tu grado y grupo.");
+        return;
+      }
+
+      const carro = parseInt(document.getElementById("carro").value) || 0;
+      const bus = parseInt(document.getElementById("bus").value) || 0;
+      const moto = parseInt(document.getElementById("moto").value) || 0;
+
+      const luzElem = document.querySelector('input[name="luz"]:checked');
+      const carneElem = document.querySelector('input[name="carne"]:checked');
+      const reciclajeElem = document.querySelector('input[name="reciclaje"]:checked');
+
+      if (!luzElem || !carneElem || !reciclajeElem) {
+        alert("Por favor, selecciona todas las opciones: reciclaje, luz y carne.");
+        return;
+      }
+
+      const luzSeleccionada = parseInt(luzElem.value);
+      const carne = parseInt(carneElem.value);
+      const reciclaje = parseInt(reciclajeElem.value);
 
       const emisionesCarroAnualPorViaje = 2.415 * 52;
       const emisionesBusAnualPorViaje = 10 * 0.15 * 52;
@@ -189,117 +242,42 @@
       const totalToneladas = totalKg / 1000;
       const media = 1.6;
 
-      let resultado = `<strong>${nombre}, tu huella de carbono anual es de ${totalToneladas.toFixed(2)} toneladas de CO₂.</strong><br><br>`;
+      let resultado = `${nombre}, tu huella de carbono anual es de ${totalToneladas.toFixed(2)} toneladas de CO₂.\n\n`;
 
       if (totalToneladas < media) {
-        resultado += " ¡Estás por debajo del promedio de Colombia (1.6 t por persona)! Muy bien cuidando el planeta.";
+        resultado += "¡Estás por debajo del promedio de Colombia (1.6 t por persona)! Muy bien cuidando el planeta.";
       } else if (totalToneladas > media) {
-        resultado += " Estás por encima del promedio de Colombia (1.6 t por persona). Puedes mejorar con pequeños cambios.";
+        resultado += "Estás por encima del promedio de Colombia (1.6 t por persona). Puedes mejorar con pequeños cambios.";
       } else {
-        resultado += " Estás en el promedio de Colombia (1.6 t por persona). ¡Vamos por un mundo más verde!";
+        resultado += "Estás justo en el promedio de Colombia (1.6 t por persona).";
       }
 
-      resultadoTexto = resultado;
-      document.getElementById("resultado").innerHTML = resultado;
+      document.getElementById("resultado").textContent = resultado;
 
-      mostrarBotonDescarga();
-    }
+      const datosParaEnviar = {
+        tipo: tipo,
+        nombre: tipo === "profesional" ? "Profesional " + nombre : nombre,
+        profesion: profesion,
+        grado: grado,
+        grupo: grupo,
+        carro: carro,
+        bus: bus,
+        moto: moto,
+        reciclaje: reciclaje,
+        luz: luzSeleccionada,
+        carne: carne,
+        resultado: resultado
+      };
 
-    function mostrarBotonDescarga() {
-      if (!document.getElementById("btnDescargar")) {
-        const btn = document.createElement("button");
-        btn.id = "btnDescargar";
-        btn.textContent = "Descargar DOCX";
-        btn.style.marginTop = "20px";
-        btn.onclick = descargarDOCX;
-        document.getElementById("resultado").appendChild(btn);
+      try {
+        await fetch(URL_APPS_SCRIPT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(datosParaEnviar)
+        });
+      } catch (error) {
+        console.error("Error al enviar datos:", error);
       }
-    }
-
-    async function descargarDOCX() {
-      if (!resultadoTexto || !nombreGlobal || !gradoGlobal || !grupoGlobal) {
-        alert("Primero debes calcular tu huella de carbono.");
-        return;
-      }
-
-      const { Document, Packer, Paragraph, TextRun, AlignmentType, ImageRun, Table, TableRow, TableCell, WidthType, VerticalAlign } = window.docx;
-
-      async function fetchImage(url) {
-        const response = await fetch(url);
-        return await response.blob();
-      }
-
-      const logoColboyd = await fetchImage("https://calculadorahuellacarbono.github.io/favicon_CBD.jpg");
-      const logoLeptones = await fetchImage("https://calculadorahuellacarbono.github.io/favicon_LB.jpg");
-      const logoVitalImpact = await fetchImage("https://calculadorahuellacarbono.github.io/favicon_vi.png");
-      const logoMinEducacion = await fetchImage("https://calculadorahuellacarbono.github.io/favicon_ME.png");
-
-      const table = new Table({
-        rows: [
-          new TableRow({
-            children: [
-              new TableCell({
-                children: [new Paragraph({ children: [new ImageRun({ data: logoColboyd, transformation: { width: 80, height: 80 } })] })],
-                verticalAlign: VerticalAlign.CENTER,
-                width: { size: 33.3, type: WidthType.PERCENTAGE },
-              }),
-              new TableCell({
-                children: [new Paragraph({
-                  children: [
-                    new ImageRun({ data: logoLeptones, transformation: { width: 60, height: 60 } }),
-                    new TextRun("  "),
-                    new ImageRun({ data: logoVitalImpact, transformation: { width: 60, height: 60 } })
-                  ],
-                  alignment: AlignmentType.CENTER
-                })],
-                verticalAlign: VerticalAlign.CENTER,
-                width: { size: 33.3, type: WidthType.PERCENTAGE },
-              }),
-              new TableCell({
-                children: [new Paragraph({ children: [new ImageRun({ data: logoMinEducacion, transformation: { width: 120, height: 50 } })], alignment: AlignmentType.RIGHT })],
-                verticalAlign: VerticalAlign.CENTER,
-                width: { size: 33.3, type: WidthType.PERCENTAGE },
-              }),
-            ]
-          }),
-        ],
-        width: { size: 100, type: WidthType.PERCENTAGE },
-      });
-
-      const fecha = new Date();
-      const fechaTexto = fecha.toLocaleDateString("es-CO", { year: "numeric", month: "long", day: "numeric" }) + " " + fecha.toLocaleTimeString("es-CO");
-
-      const doc = new Document({
-        styles: {
-          default: {
-            document: {
-              run: { font: "Comic Sans MS" }
-            }
-          }
-        },
-        sections: [{
-          properties: {},
-          children: [
-            table,
-            new Paragraph({ children: [new TextRun({ text: "Mi Huella de Carbono COLBOYD", bold: true, size: 28 })], alignment: AlignmentType.CENTER, spacing: { after: 200 } }),
-            new Paragraph({ text: '"Transforma tu huella, transforma el planeta"', italics: true, alignment: AlignmentType.CENTER, spacing: { after: 300 } }),
-            new Paragraph({ children: [new TextRun({ text: `Nombre: ${nombreGlobal}`, size: 24, bold: true })] }),
-            new Paragraph({ children: [new TextRun({ text: `Grado: ${gradoGlobal}`, size: 24, bold: true })] }),
-            new Paragraph({ children: [new TextRun({ text: `Grupo: ${grupoGlobal}`, size: 24, bold: true })], spacing: { after: 200 } }),
-            new Paragraph({ children: [new TextRun({ text: resultadoTexto.replace(/<[^>]+>/g, ''), size: 22 })], spacing: { after: 300 } }),
-            new Paragraph({ text: `Fecha y hora de impresión: ${fechaTexto}`, size: 20 })
-          ]
-        }]
-      });
-
-      const blob = await Packer.toBlob(doc);
-      const nombreArchivo = `HuellaCarbono_${nombreGlobal.replace(/\s+/g, "_")}.docx`;
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = nombreArchivo;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
     }
   </script>
 </body>
