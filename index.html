@@ -88,14 +88,14 @@
 <body>
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
     <div style="flex: 1; display: flex; justify-content: flex-start;">
-        <img src="https://calculadorahuellacarbono.github.io/favicon_CBD.jpg" alt="Logo COLBOYD" style="width: 120px; height: auto;" />
+      <img src="https://calculadorahuellacarbono.github.io/favicon_CBD.jpg" alt="Logo COLBOYD" style="width: 120px; height: auto;" />
     </div>
     <div style="flex: 1; display: flex; justify-content: center; align-items: center; gap: 20px;">
-        <img src="https://calculadorahuellacarbono.github.io/favicon_LB.jpg" alt="Logo Leptones BOY" style="width: 100px; height: auto;" />
-        <img src="https://calculadorahuellacarbono.github.io/favicon_vi.png" alt="Logo Vital Impact" style="width: 150px; height: auto;" />
+      <img src="https://calculadorahuellacarbono.github.io/favicon_LB.jpg" alt="Logo Leptones BOY" style="width: 100px; height: auto;" />
+      <img src="https://calculadorahuellacarbono.github.io/favicon_vi.png" alt="Logo Vital Impact" style="width: 150px; height: auto;" />
     </div>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
-        <img src="https://calculadorahuellacarbono.github.io/favicon_ME.png" alt="Logo MinEducación" style="width: 170px; height: auto;" />
+      <img src="https://calculadorahuellacarbono.github.io/favicon_ME.png" alt="Logo MinEducación" style="width: 170px; height: auto;" />
     </div>
   </div>
 
@@ -105,8 +105,7 @@
   <h4>Las emisiones de CO₂ que produces al año son una de las grandes variables en el aumento del calentamiento global, ya que contribuyen al efecto invernadero y aceleran los cambios en el clima.</h4>
   <h4>Nosotros podemos disminuir nuestra huella de carbono si apagamos las luces cuando no necesitamos, usamos las 3 R (Recicla, Reduce, Reutiliza), vamos hacia cualquier sitio en bicicleta y cosas así.</h4>
 
-  <form id="formCalc" action="https://script.google.com/macros/s/AKfycbwfiscv5FZw8J809TLKMf_0alSWhK2CBVCg39is7O5CCegc_8NZBzdVpl0unH7MBCsh/exec" method="GET" target="_blank" onsubmit="return prepararYEnviar();">
-
+  <form id="formCalc" onsubmit="return prepararYEnviar();">
     <div class="pregunta">
       <label>¿Eres estudiante o profesional?</label>
       <select id="tipoUsuario" name="tipoUsuario" onchange="cambiarTipo()">
@@ -115,39 +114,32 @@
         <option value="estudiante">Estudiante</option>
       </select>
     </div>
-
     <div class="pregunta">
       <label>Nombre completo:</label>
       <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre completo" />
     </div>
-
     <div class="pregunta" id="divProfesional" style="display:none;">
       <label>Profesión:</label>
       <input type="text" id="profesion" name="profesion" placeholder="Ejemplo: Ingeniero, Profesor" />
     </div>
-
     <div class="pregunta" id="divEstudiante" style="display:none;">
       <label>Grado:</label>
       <input type="text" id="grado" name="grado" placeholder="Ejemplo: 10" />
       <label>Grupo:</label>
       <input type="text" id="grupo" name="grupo" placeholder="Ejemplo: 01" />
     </div>
-
     <div class="pregunta">
       <label>¿Cuántos días a la semana usas carro?</label>
       <input type="number" id="carro" name="carro" min="0" max="7" />
     </div>
-
     <div class="pregunta">
       <label>¿Cuántos días a la semana usas bus?</label>
       <input type="number" id="bus" name="bus" min="0" max="7" />
     </div>
-
     <div class="pregunta">
       <label>¿Cuántos días a la semana usas moto?</label>
       <input type="number" id="moto" name="moto" min="0" max="7" />
     </div>
-
     <div class="pregunta">
       <label>¿Reciclas en casa?</label>
       <div class="opciones verticales">
@@ -156,7 +148,6 @@
         <label><input type="radio" name="reciclaje" value="2"> Nunca</label>
       </div>
     </div>
-
     <div class="pregunta">
       <label>¿Apagas las luces cuando no las usas?</label>
       <div class="opciones verticales">
@@ -165,7 +156,6 @@
         <label><input type="radio" name="luzSeleccionada" value="2"> Nunca</label>
       </div>
     </div>
-
     <div class="pregunta">
       <label>¿Consumes carne todos los días?</label>
       <div class="opciones verticales">
@@ -174,9 +164,7 @@
         <label><input type="radio" name="carne" value="0"> Nunca</label>
       </div>
     </div>
-
     <button type="submit">Calcular y enviar</button>
-
   </form>
 
   <div id="resultado"></div>
@@ -234,7 +222,14 @@
       campoRes.name = "resultado";
       campoRes.value = totalToneladas.toFixed(2);
       document.getElementById("formCalc").appendChild(campoRes);
-      return true;
+
+      const form = document.getElementById("formCalc");
+      const params = new URLSearchParams(new FormData(form)).toString();
+      const url = "https://script.google.com/macros/s/AKfycbwfiscv5FZw8J809TLKMf_0alSWhK2CBVCg39is7O5CCegc_8NZBzdVpl0unH7MBCsh/exec?" + params;
+
+      window.open(url, "popupForm", "width=600,height=700,scrollbars=yes,resizable=yes");
+
+      return false;
     }
   </script>
 </body>
