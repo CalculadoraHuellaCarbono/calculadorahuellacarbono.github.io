@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Calculadora de huella de carbono COLBOYD</title>
   <link rel="icon" href="https://calculadorahuellacarbono.github.io/favicon_vi.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       background-color: #FFFFFF;
@@ -14,17 +15,42 @@
       border-radius: 15px;
     }
     .aviso {
-        border: 3px solid #c0392b;
-        background: #f9e6e6;
-        padding: 15px;
-        margin: 20px 0;
-        font-size: 18px;
-        font-weight: bold;
-        color: #a32923;
-        border-radius: 8px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg,#fff0f0,#ffe5e5);
+      border-bottom: 4px solid #b80000;
+      padding: 14px 12px;
+      font-size: 17px;
+      font-weight: 700;
+      color: #5a0000;
+      text-align: center;
+      z-index: 9999;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
     }
+    .aviso a { color: #b80000; text-decoration: underline; font-weight: 800; }
+    .aviso button {
+      position: absolute;
+      right: 12px;
+      top: 8px;
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      color: #5a0000;
+      cursor: pointer;
+      padding: 6px;
+      line-height: 1;
+    }
+    .aviso button:focus { outline: 2px solid rgba(184,0,0,0.2); border-radius: 6px; }
+
     h1, h3 { text-align: center; color: #000000; }
     h4 { font-weight: normal; text-align: left; font-family: Arial, Helvetica, sans-serif; }
+
     .pregunta {
       background-color: #c8e6c9;
       padding: 15px;
@@ -32,6 +58,7 @@
       margin-top: 20px;
     }
     label { font-size: 18px; margin-bottom: 10px; display: block; }
+
     input[type="text"], input[type="number"], select {
       font-size: 16px;
       padding: 8px;
@@ -41,6 +68,7 @@
       width: calc(100% - 16px);
       box-sizing: border-box;
     }
+
     .opciones.verticales {
       display: flex;
       flex-direction: column;
@@ -57,7 +85,8 @@
       margin: 0;
       padding: 0;
     }
-    button {
+
+    button[type="submit"], button[type="button"].primary {
       margin-top: 30px;
       padding: 12px;
       font-size: 18px;
@@ -68,7 +97,8 @@
       border-radius: 10px;
       cursor: pointer;
     }
-    button:hover { background-color: #42a5f5; }
+    button[type="submit"]:hover, button[type="button"].primary:hover { background-color: #005100; }
+
     #resultado {
       margin-top: 30px;
       background-color: #c8e6c9;
@@ -78,6 +108,7 @@
       border: 1px solid #388e3c;
       white-space: pre-wrap;
     }
+
     .acordeon {
       margin: 20px 0;
       border: 1px solid #388e3c;
@@ -107,6 +138,7 @@
       max-height: 500px;
       padding: 12px;
     }
+
     .toast {
       visibility: hidden;
       min-width: 250px;
@@ -131,9 +163,24 @@
     }
     .toast.success { background-color: #4CAF50; }
     .toast.error { background-color: #f44336; }
+
+    @media (max-width: 640px) {
+      .aviso { font-size: 15px; padding: 12px 10px; }
+      .aviso button { top: 6px; right: 8px; font-size: 18px; }
+    }
   </style>
 </head>
+
 <body>
+
+  <div id="avisoBanner" class="aviso" role="region" aria-label="Aviso importante">
+    <span>⚠ Esta página dejará de recibir actualizaciones. Nueva página disponible:</span>
+    <a href="https://leptonesboy.github.io" target="_blank" rel="noopener">https://leptonesboy.github.io</a>
+    <button id="cerrarBanner" aria-label="Cerrar aviso">✕</button>
+  </div>
+
+  <div id="bannerSpacer" style="height:72px"></div>
+
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
     <div style="flex: 1; display: flex; justify-content: flex-start;">
       <img src="https://calculadorahuellacarbono.github.io/favicon_CBD.jpg" alt="Logo COLBOYD" style="width: 120px; height: auto;" />
@@ -147,20 +194,14 @@
     </div>
   </div>
 
-    <div class="aviso">
-        Esta página dejará de recibir actualizaciones.  
-        Puedes acceder a la nueva página aquí:  
-        <a href="https://leptonesboy.github.io" target="_blank">Ir a la nueva página</a>
-    </div>
-
   <h1>Mi Huella de Carbono COLBOYD</h1>
   <h3>"Transforma tu huella, transforma el planeta"</h3>
 
   <div class="acordeon">
     <div class="acordeon-titulo">¿Sabes qué es la Huella de Carbono?</div>
     <div class="acordeon-contenido">
-      <p>Las emisiones de CO₂ que produces al año son una de las grandes variables en el aumento del calentamiento global, ya que contribuyen al efecto invernadero y aceleran los cambios en el clima.</p>
-      <p>Podemos disminuir nuestra huella de carbono apagando las luces cuando no las usamos, reciclando, usando bicicleta o transporte público, y consumiendo menos carne.</p>
+      <p>Las emisiones de CO₂ que produces al año son una de las grandes variables en el aumento del calentamiento global.</p>
+      <p>Podemos disminuir nuestra huella apagando luces, reciclando, usando bici o transporte público, y consumiendo menos carne.</p>
     </div>
   </div>
 
@@ -169,6 +210,7 @@
       <label>Nombre completo:</label>
       <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre completo" />
     </div>
+
     <div class="pregunta">
       <label>¿Eres estudiante o profesional?</label>
       <select id="tipoUsuario" name="tipoUsuario" onchange="cambiarTipo()">
@@ -177,28 +219,34 @@
         <option value="estudiante">Estudiante</option>
       </select>
     </div>
+
     <div class="pregunta" id="divProfesional" style="display:none;">
       <label>Profesión:</label>
       <input type="text" id="profesion" name="profesion" placeholder="Ejemplo: Ingeniero, Profesor" />
     </div>
+
     <div class="pregunta" id="divEstudiante" style="display:none;">
       <label>Grado:</label>
       <input type="text" id="grado" name="grado" placeholder="Ejemplo: 10" />
       <label>Grupo:</label>
       <input type="text" id="grupo" name="grupo" placeholder="Ejemplo: 01" />
     </div>
+
     <div class="pregunta">
       <label>¿Cuántos días a la semana usas carro?</label>
       <input type="number" id="carro" name="carro" min="0" max="7" />
     </div>
+
     <div class="pregunta">
       <label>¿Cuántos días a la semana usas bus?</label>
       <input type="number" id="bus" name="bus" min="0" max="7" />
     </div>
+
     <div class="pregunta">
       <label>¿Cuántos días a la semana usas moto?</label>
       <input type="number" id="moto" name="moto" min="0" max="7" />
     </div>
+
     <div class="pregunta">
       <label>¿Reciclas en casa?</label>
       <div class="opciones verticales">
@@ -207,6 +255,7 @@
         <label><input type="radio" name="reciclaje" value="2"> Nunca</label>
       </div>
     </div>
+
     <div class="pregunta">
       <label>¿Apagas las luces cuando no las usas?</label>
       <div class="opciones verticales">
@@ -215,6 +264,7 @@
         <label><input type="radio" name="luzSeleccionada" value="2"> Nunca</label>
       </div>
     </div>
+
     <div class="pregunta">
       <label>¿Consumes carne todos los días?</label>
       <div class="opciones verticales">
@@ -223,14 +273,26 @@
         <label><input type="radio" name="carne" value="0"> Nunca</label>
       </div>
     </div>
+
     <button type="submit">Calcular y enviar</button>
   </form>
 
   <div id="resultado"></div>
-
   <div id="toast" class="toast"></div>
 
   <script>
+    document.getElementById("cerrarBanner").addEventListener("click", function() {
+      const banner = document.getElementById("avisoBanner");
+      const spacer = document.getElementById("bannerSpacer");
+      banner.style.display = "none";
+      spacer.style.height = "0px";
+      try { localStorage.setItem("bannerClosed_colboyd","1"); } catch(e){}
+    });
+    if (localStorage.getItem("bannerClosed_colboyd") === "1") {
+      document.getElementById("avisoBanner").style.display = "none";
+      document.getElementById("bannerSpacer").style.height = "0px";
+    }
+
     function showToast(msg, success = true) {
       const toast = document.getElementById("toast");
       toast.textContent = msg;
@@ -263,18 +325,25 @@
       const luzSeleccionada = parseInt(luzRadio.value);
       const reciclaje = parseInt(reciclajeRadio.value);
       const carne = parseInt(carneRadio.value);
+
       const emisionesCarro = 2.415 * 52;
       const emisionesBus = 10 * 0.15 * 52;
       const emisionesMoto = 15 * 0.046 * 52;
+
       const emisionesLuz = [0, 350, 700];
       const emisionesReciclaje = [0, 150, 300];
-      const totalKg = carro * emisionesCarro + bus * emisionesBus + moto * emisionesMoto + emisionesLuz[luzSeleccionada] + carne * 900 + emisionesReciclaje[reciclaje];
+
+      const totalKg = carro * emisionesCarro + bus * emisionesBus + moto * emisionesMoto +
+                      emisionesLuz[luzSeleccionada] + carne * 900 + emisionesReciclaje[reciclaje];
+
       const totalToneladas = totalKg / 1000;
       const media = 1.6;
+
       let mensaje = `${nombre}, tu huella de carbono anual es de ${totalToneladas.toFixed(2)} toneladas de CO₂.\n\n`;
-      if (totalToneladas < media) mensaje += "¡Estás por debajo del promedio de Colombia (1.6 t por persona)! Muy bien cuidando el planeta.";
-      else if (totalToneladas > media) mensaje += "Estás por encima del promedio de Colombia (1.6 t por persona). Puedes mejorar con pequeños cambios.";
-      else mensaje += "Estás justo en el promedio de Colombia (1.6 t por persona).";
+      if (totalToneladas < media) mensaje += "¡Estás por debajo del promedio de Colombia (1.6 t por persona)!";
+      else if (totalToneladas > media) mensaje += "Estás por encima del promedio. Puedes mejorar con pequeños cambios.";
+      else mensaje += "Estás justo en el promedio de Colombia.";
+
       document.getElementById("resultado").textContent = mensaje;
 
       const data = {
@@ -304,10 +373,13 @@
     document.querySelectorAll(".acordeon").forEach((acordeon) => {
       const titulo = acordeon.querySelector(".acordeon-titulo");
       titulo.addEventListener("click", () => {
-        document.querySelectorAll(".acordeon").forEach((otro) => { if (otro !== acordeon) otro.classList.remove("activo"); });
+        document.querySelectorAll(".acordeon").forEach((otro) => {
+          if (otro !== acordeon) otro.classList.remove("activo");
+        });
         acordeon.classList.toggle("activo");
       });
     });
   </script>
+
 </body>
 </html>
